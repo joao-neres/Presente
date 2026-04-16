@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Lara 💙</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            background: linear-gradient(to bottom, #001f3f, #0074D9);
+        }
+
+        /* 🌙 overlay */
+        #overlayNoite {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom, #000814, #001d3d);
+            opacity: 0;
+            transition: opacity 3s ease;
+            z-index: 0;
+        }
+
+        .noite #overlayNoite {
+            opacity: 1;
+        }
+
+        /* ✨ estrelas */
+        .estrela {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            animation: piscar 2s infinite;
+            z-index: 2;
+        }
+
+        @keyframes piscar {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            margin-top: 60px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            background: white;
+            color: #0074D9;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 15;
+            transition: transform 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.9);
+        }
+
+        #mensagem {
+            margin-top: 20px;
+            font-size: 22px;
+            opacity: 0;
+            transition: 1s;
+        }
+
+        #efeitos {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .conteudo {
+            position: relative;
+            z-index: 10;
+        }
+
+        .foto {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            width: 200px;
+            border-radius: 15px;
+            transform: translateX(-50%);
+            z-index: 20;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        #final {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        #fechar {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        @keyframes cair {
+            0% {
+                transform: translateY(0px);
+            }
+
+            100% {
+                transform: translateY(110vh);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="overlayNoite"></div>
+
+    <div class="conteudo">
+        <h1>💙 Lara 💙</h1>
+        <p>Clique e descubra algo doce...</p>
+
+        <button onclick="mostrar()">Clique aqui!</button>
+
+        <div id="mensagem"></div>
+
+        <p>Você me ama? 💖</p>
+        <button onclick="sim()">SIM 💖</button>
+        <button id="nao" onclick="clicouNao()">NÃO 😅</button>
+    </div>
+
+    <div id="efeitos"></div>
+
+    <img src="foto.jpg" class="foto">
+
+    <div id="final">
+        <div id="fechar" onclick="fecharFinal()">❌</div>
+        <div id="textoFinal">💙 Eu te amo muito, Lara 💙</div>
+    </div>
+
+    <script>
+        let cliques = 0;
+        let cliquesNao = 0;
+        let escalaNao = 1;
+
+        const mensagens = [
+            "Lara, você é o meu doce favorito 🍬",
+            "Seu sorriso deixa tudo mais bonito 💙",
+            "Eu escolheria você todos os dias 🌸",
+            "Você é meu lugar seguro 💕",
+            "Te amo mais do que palavras conseguem dizer 💖"
+        ];
+
+        function mostrar() {
+            cliques++;
+
+            let msg = mensagens[Math.floor(Math.random() * mensagens.length)];
+            let div = document.getElementById("mensagem");
+            div.innerHTML = msg;
+            div.style.opacity = 1;
+
+            explodir();
+
+            if (cliques >= 5) {
+                abrirFinal("💙 saiba que eu te amo muito, Lara 💙");
+                cliques = 0;
+            }
+        }
+
+        function explodir(qtd = 20) {
+            const container = document.getElementById("efeitos");
+
+            const origemX = Math.random() * window.innerWidth;
+            const origemY = Math.random() * window.innerHeight * 0.6;
+
+            for (let i = 0; i < qtd; i++) {
+                const item = document.createElement("div");
+                item.innerHTML = ["💖", "🌸", "🎀"][Math.floor(Math.random() * 3)];
+
+                item.style.position = "absolute";
+                item.style.left = origemX + "px";
+                item.style.top = origemY + "px";
+
+                const angle = Math.random() * 2 * Math.PI;
+                const dist = 150 + Math.random() * 150;
+
+                const x = Math.cos(angle) * dist;
+                const y = Math.sin(angle) * dist;
+
+                requestAnimationFrame(() => {
+                    item.style.transition = "transform 0.8s, opacity 0.8s";
+                    item.style.transform = `translate(${x}px, ${y}px)`;
+                    item.style.opacity = "0";
+                });
+
+                container.appendChild(item);
+                setTimeout(() => item.remove(), 800);
+            }
+        }
+
+        // 💖 SIM
+        function sim() {
+            explodir(60);
+        }
+
+        // 😆 NÃO (100% confiável)
+        function clicouNao() {
+            cliquesNao++;
+
+            const btn = document.getElementById("nao");
+
+            // diminui o botão
+            escalaNao -= 0.1;
+            if (escalaNao < 0.5) escalaNao = 0.5;
+            btn.style.transform = `scale(${escalaNao})`;
+
+            // foge DEPOIS do clique
+            fugir();
+
+            if (cliquesNao >= 2) {
+                abrirFinal("😏 Nem tenta fugir... você me ama sim 💖");
+                cliquesNao = 0;
+                escalaNao = 1;
+                btn.style.transform = "scale(1)";
+            }
+        }
+
+        // abrir final
+        function abrirFinal(texto) {
+            document.getElementById("textoFinal").innerHTML = texto;
+            document.getElementById("final").style.display = "flex";
+        }
+
+        // fechar
+        function fecharFinal() {
+            document.getElementById("final").style.display = "none";
+        }
+
+        // fugir
+        function fugir() {
+            const btn = document.getElementById("nao");
+
+            const limiteX = window.innerWidth - btn.offsetWidth;
+            const limiteY = window.innerHeight * 0.5;
+
+            btn.style.position = "fixed";
+            btn.style.left = Math.random() * limiteX + "px";
+            btn.style.top = Math.random() * limiteY + "px";
+        }
+
+        // 🌸 queda
+        function criarItem() {
+            const container = document.getElementById("efeitos");
+            const item = document.createElement("div");
+
+            item.innerHTML = ["🌸", "🎀"][Math.floor(Math.random() * 2)];
+
+            item.style.position = "absolute";
+            item.style.left = Math.random() * 100 + "vw";
+            item.style.top = "-50px";
+            item.style.animation = "cair " + (5 + Math.random() * 5) + "s linear";
+
+            container.appendChild(item);
+            setTimeout(() => item.remove(), 10000);
+        }
+
+        setInterval(criarItem, 400);
+
+        // ✨ estrelas
+        function criarEstrelas() {
+            for (let i = 0; i < 40; i++) {
+                const estrela = document.createElement("div");
+                estrela.className = "estrela";
+                estrela.style.left = Math.random() * 100 + "vw";
+                estrela.style.top = Math.random() * 100 + "vh";
+                document.body.appendChild(estrela);
+            }
+        }
+
+        // 🌙 modo romântico
+        setTimeout(() => {
+            document.body.classList.add("noite");
+            criarEstrelas();
+        }, 10000);
+    </script>
+
+</body>
+
+</html>
