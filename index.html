@@ -14,7 +14,6 @@
             overflow: hidden;
             font-family: Arial, sans-serif;
             color: white;
-            text-align: center;
             background: linear-gradient(to bottom, #001f3f, #0074D9);
         }
 
@@ -32,32 +31,33 @@
             opacity: 1;
         }
 
-        /* ✨ estrelas */
-        .estrela {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: white;
-            animation: piscar 2s infinite;
-            z-index: 2;
+        /* 📱 CONTEÚDO CENTRALIZADO */
+        .conteudo {
+            position: relative;
+            z-index: 10;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        @keyframes piscar {
-
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
+        /* ajuste título */
         h1 {
-            margin-top: 60px;
+            margin: 0;
         }
 
+        /* espaçamento melhor */
+        p {
+            margin: 10px 0;
+        }
+
+        /* 🔘 botões */
         button {
             padding: 12px 20px;
             border-radius: 10px;
@@ -65,7 +65,7 @@
             background: white;
             color: #0074D9;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 15;
@@ -76,9 +76,10 @@
             transform: scale(0.9);
         }
 
+        /* mensagem */
         #mensagem {
-            margin-top: 20px;
-            font-size: 22px;
+            margin-top: 15px;
+            font-size: 20px;
             opacity: 0;
             transition: 1s;
         }
@@ -90,22 +91,20 @@
             pointer-events: none;
         }
 
-        .conteudo {
-            position: relative;
-            z-index: 10;
-        }
-
+        /* 📸 FOTO AJUSTADA */
         .foto {
             position: fixed;
-            bottom: 80px;
+            bottom: 20px;
             left: 50%;
-            width: 200px;
+            width: 150px;
             border-radius: 15px;
             transform: translateX(-50%);
-            z-index: 20;
+            z-index: 5;
+            /* 🔥 abaixo dos botões agora */
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
+        /* 💌 final */
         #final {
             display: none;
             position: fixed;
@@ -145,7 +144,7 @@
         <h1>💙 Lara 💙</h1>
         <p>Clique e descubra algo doce...</p>
 
-        <button onclick="mostrar()">Clique aqui!</button>
+        <button onclick="mostrar()">Clique aqui 🍬</button>
 
         <div id="mensagem"></div>
 
@@ -160,7 +159,7 @@
 
     <div id="final">
         <div id="fechar" onclick="fecharFinal()">❌</div>
-        <div id="textoFinal">💙 Eu te amo muito, Lara 💙</div>
+        <div id="textoFinal">💙 Eu sabia... te amo muito, Lara 💙</div>
     </div>
 
     <script>
@@ -187,7 +186,7 @@
             explodir();
 
             if (cliques >= 5) {
-                abrirFinal("💙 saiba que eu te amo muito, Lara 💙");
+                abrirFinal("💙 Eu sabia... te amo muito, Lara 💙");
                 cliques = 0;
             }
         }
@@ -223,23 +222,19 @@
             }
         }
 
-        // 💖 SIM
         function sim() {
             explodir(60);
         }
 
-        // 😆 NÃO (100% confiável)
         function clicouNao() {
             cliquesNao++;
 
             const btn = document.getElementById("nao");
 
-            // diminui o botão
             escalaNao -= 0.1;
             if (escalaNao < 0.5) escalaNao = 0.5;
             btn.style.transform = `scale(${escalaNao})`;
 
-            // foge DEPOIS do clique
             fugir();
 
             if (cliquesNao >= 2) {
@@ -250,18 +245,15 @@
             }
         }
 
-        // abrir final
         function abrirFinal(texto) {
             document.getElementById("textoFinal").innerHTML = texto;
             document.getElementById("final").style.display = "flex";
         }
 
-        // fechar
         function fecharFinal() {
             document.getElementById("final").style.display = "none";
         }
 
-        // fugir
         function fugir() {
             const btn = document.getElementById("nao");
 
@@ -273,7 +265,6 @@
             btn.style.top = Math.random() * limiteY + "px";
         }
 
-        // 🌸 queda
         function criarItem() {
             const container = document.getElementById("efeitos");
             const item = document.createElement("div");
@@ -291,7 +282,6 @@
 
         setInterval(criarItem, 400);
 
-        // ✨ estrelas
         function criarEstrelas() {
             for (let i = 0; i < 40; i++) {
                 const estrela = document.createElement("div");
@@ -302,7 +292,6 @@
             }
         }
 
-        // 🌙 modo romântico
         setTimeout(() => {
             document.body.classList.add("noite");
             criarEstrelas();
