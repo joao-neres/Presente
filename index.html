@@ -13,40 +13,61 @@
             margin: 0;
             font-family: Arial, sans-serif;
             color: white;
-            overflow: hidden;
             background: linear-gradient(to bottom, #001f3f, #0074D9);
+            overflow-x: hidden;
         }
 
-        /* CAMADAS */
-        #background {
+        /* 🌙 overlay */
+        #overlayNoite {
             position: fixed;
             inset: 0;
+            background: linear-gradient(to bottom, #000814, #001d3d);
+            opacity: 0;
+            transition: opacity 3s ease;
             z-index: 1;
         }
 
-        #efeitos {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
+        .noite #overlayNoite {
+            opacity: 1;
         }
 
+        /* ✨ estrelas */
+        .estrela {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: piscar 2s infinite;
+            z-index: 2;
+        }
+
+        @keyframes piscar {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* 📱 conteúdo */
         .conteudo {
             position: relative;
-            z-index: 3;
-
+            z-index: 10;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-
+            align-items: center;
             height: 100dvh;
             padding: 20px;
-            text-align: center;
             box-sizing: border-box;
+            text-align: center;
         }
 
-        /* TEXTO */
         h1 {
             margin: 0;
         }
@@ -55,89 +76,95 @@
             margin: 10px 0;
         }
 
-        /* BOTÕES */
+        /* 🔘 botões */
         button {
             padding: 12px 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             border: none;
             background: white;
             color: #0074D9;
+            cursor: pointer;
             margin-top: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            z-index: 4;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 20;
             position: relative;
         }
 
         button:active {
-            transform: scale(0.92);
+            transform: scale(0.9);
         }
 
-        /* FOTO */
+        /* 💬 mensagem */
+        #mensagem {
+            margin-top: 15px;
+            font-size: 20px;
+            opacity: 0;
+            transition: 1s;
+        }
+
+        /* 💥 camada efeitos */
+        #efeitos {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* 📸 foto */
         .foto {
             position: fixed;
             bottom: 20px;
             left: 50%;
-            transform: translateX(-50%);
-            width: 160px;
+            width: 140px;
             border-radius: 15px;
-            z-index: 3;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transform: translateX(-50%);
+            z-index: 8;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        /* ESTRELAS */
-        .estrela {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            animation: piscar 2s infinite;
-        }
-
-        @keyframes piscar {
-            50% {
-                opacity: 0.2;
-            }
-        }
-
-        /* QUEDA */
-        @keyframes cair {
-            to {
-                transform: translateY(110vh);
-            }
-        }
-
-        /* FINAL */
+        /* 💌 final */
         #final {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 10;
-            justify-content: center;
+            z-index: 50;
             align-items: center;
-            flex-direction: column;
-            font-size: 24px;
+            justify-content: center;
+            font-size: 26px;
         }
 
         #fechar {
             position: absolute;
             top: 20px;
-            right: 20px;
+            right: 25px;
             font-size: 28px;
             cursor: pointer;
+        }
+
+        /* 🌸 queda */
+        @keyframes cair {
+            from {
+                transform: translateY(-50px);
+            }
+
+            to {
+                transform: translateY(110vh);
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="background"></div>
+    <div id="overlayNoite"></div>
     <div id="efeitos"></div>
 
     <div class="conteudo">
         <h1>💙 Lara 💙</h1>
+        <p>Clique e descubraa!</p>
 
-        <p>Clique e descubra algo doce...</p>
         <button onclick="mostrar()">Clique aqui 🍬</button>
 
         <div id="mensagem"></div>
@@ -151,63 +178,95 @@
 
     <div id="final">
         <div id="fechar" onclick="fecharFinal()">❌</div>
-        <div id="textoFinal"></div>
+        <div id="textoFinal">💙 Saiba que eu te amo muito, Lara 💙</div>
     </div>
 
     <script>
+        let cliques = 0;
         let cliquesNao = 0;
+        let escalaNao = 1;
 
-        /* 💬 mensagens */
+        const mensagens = [
+            "Princesa, você é minha pessoa favorita 🍬",
+            "Seu sorriso deixa tudo mais bonito 💙",
+            "Eu escolheria você todos os dias 🌸",
+            "Você é meu lugar seguro 💕",
+            "Te amo mais do que palavras conseguem dizer 💖"
+        ];
+
         function mostrar() {
-            document.getElementById("mensagem").innerText =
-                "Você é tudo pra mim 💙";
+            cliques++;
+
+            let msg = mensagens[Math.floor(Math.random() * mensagens.length)];
+            let div = document.getElementById("mensagem");
+            div.innerHTML = msg;
+            div.style.opacity = 1;
 
             explodir();
-        }
 
-        /* 💥 explosão */
-        function explodir() {
-            const container = document.getElementById("efeitos");
-
-            for (let i = 0; i < 20; i++) {
-                const e = document.createElement("div");
-                e.innerHTML = ["💖", "🌸", "🎀"][Math.floor(Math.random() * 3)];
-
-                e.style.position = "absolute";
-                e.style.left = Math.random() * 100 + "vw";
-                e.style.top = Math.random() * 50 + "vh";
-
-                e.style.transition = "1s";
-                requestAnimationFrame(() => {
-                    e.style.transform = `translateY(-100px)`;
-                    e.style.opacity = 0;
-                });
-
-                container.appendChild(e);
-                setTimeout(() => e.remove(), 1000);
+            if (cliques >= 5) {
+                abrirFinal("💙 Saiba que eu te amo muito, Lara 💙");
+                cliques = 0;
             }
         }
 
-        /* 😆 NÃO */
+        /* 💥 explosão corrigida */
+        function explodir(qtd = 20) {
+            const container = document.getElementById("efeitos");
+
+            const origemX = Math.random() * window.innerWidth;
+            const origemY = Math.random() * window.innerHeight * 0.6;
+
+            for (let i = 0; i < qtd; i++) {
+                const item = document.createElement("div");
+                item.innerHTML = ["💖", "🌸", "🎀"][Math.floor(Math.random() * 3)];
+
+                item.style.position = "absolute";
+                item.style.left = origemX + "px";
+                item.style.top = origemY + "px";
+
+                const angle = Math.random() * 2 * Math.PI;
+                const dist = 120 + Math.random() * 120;
+
+                const x = Math.cos(angle) * dist;
+                const y = Math.sin(angle) * dist;
+
+                requestAnimationFrame(() => {
+                    item.style.transition = "transform 0.8s, opacity 0.8s";
+                    item.style.transform = `translate(${x}px, ${y}px)`;
+                    item.style.opacity = "0";
+                });
+
+                container.appendChild(item);
+                setTimeout(() => item.remove(), 800);
+            }
+        }
+
+        function sim() {
+            explodir(50);
+        }
+
         function clicouNao() {
             cliquesNao++;
+
+            const btn = document.getElementById("nao");
+
+            escalaNao -= 0.1;
+            if (escalaNao < 0.5) escalaNao = 0.5;
+            btn.style.transform = `scale(${escalaNao})`;
 
             fugir();
 
             if (cliquesNao >= 2) {
-                abrirFinal("😏 Você me ama sim 💖");
-                document.getElementById("nao").style.display = "none";
+                abrirFinal(" Nem tenta fugir você me ama sim 😏💖");
+                cliquesNao = 0;
+                escalaNao = 1;
+                btn.style.transform = "scale(1)";
             }
         }
 
-        /* 💖 SIM */
-        function sim() {
-            abrirFinal("💙 Eu sabia... te amo muito Lara 💙");
-        }
-
-        /* FINAL */
         function abrirFinal(texto) {
-            document.getElementById("textoFinal").innerText = texto;
+            document.getElementById("textoFinal").innerHTML = texto;
             document.getElementById("final").style.display = "flex";
         }
 
@@ -215,38 +274,52 @@
             document.getElementById("final").style.display = "none";
         }
 
-        /* fugir */
         function fugir() {
             const btn = document.getElementById("nao");
 
+            const limiteX = window.innerWidth - btn.offsetWidth;
+            const limiteY = window.innerHeight * 0.5;
+
             btn.style.position = "fixed";
-            btn.style.left = Math.random() * 70 + "vw";
-            btn.style.top = Math.random() * 60 + "vh";
+            btn.style.left = Math.random() * limiteX + "px";
+            btn.style.top = Math.random() * limiteY + "px";
         }
 
-        /* 🌸 queda */
-        setInterval(() => {
-            const e = document.createElement("div");
-            e.innerHTML = ["🌸", "🎀"][Math.floor(Math.random() * 2)];
+        /* 🌸 queda corrigida */
+        function criarItem() {
+            const container = document.getElementById("efeitos");
+            const item = document.createElement("div");
 
-            e.style.position = "absolute";
-            e.style.left = Math.random() * 100 + "vw";
-            e.style.top = "-20px";
-            e.style.animation = "cair 6s linear";
+            item.innerHTML = ["🌸", "🎀"][Math.floor(Math.random() * 2)];
 
-            document.getElementById("efeitos").appendChild(e);
+            item.style.position = "absolute";
+            item.style.left = Math.random() * 100 + "vw";
+            item.style.top = "-50px";
+            item.style.animation = "cair " + (5 + Math.random() * 5) + "s linear";
 
-            setTimeout(() => e.remove(), 6000);
-        }, 400);
-
-        /* ✨ estrelas */
-        for (let i = 0; i < 40; i++) {
-            const s = document.createElement("div");
-            s.className = "estrela";
-            s.style.left = Math.random() * 100 + "vw";
-            s.style.top = Math.random() * 100 + "vh";
-            document.getElementById("background").appendChild(s);
+            container.appendChild(item);
+            setTimeout(() => item.remove(), 10000);
         }
+
+        setInterval(criarItem, 400);
+
+        /* ✨ estrelas corrigidas */
+        function criarEstrelas() {
+            const container = document.getElementById("efeitos");
+
+            for (let i = 0; i < 40; i++) {
+                const estrela = document.createElement("div");
+                estrela.className = "estrela";
+                estrela.style.left = Math.random() * 100 + "vw";
+                estrela.style.top = Math.random() * 100 + "vh";
+                container.appendChild(estrela);
+            }
+        }
+
+        setTimeout(() => {
+            document.body.classList.add("noite");
+            criarEstrelas();
+        }, 10000);
     </script>
 
 </body>
